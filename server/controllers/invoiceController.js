@@ -51,7 +51,7 @@ exports.createInvoice = async (req, res) => {
 exports.updateInvoice = async (req, res) => {
   try {
     const invoice = await Invoice.findById(req.params.id);
- 
+
     if (!invoice) {
       return res.status(404).json({ message: 'Invoice not found' });
     }
@@ -74,7 +74,7 @@ exports.updateInvoice = async (req, res) => {
 exports.deleteInvoice = async (req, res) => {
   try {
     const invoice = await Invoice.findById(req.params.id);
- 
+
     if (!invoice) {
       return res.status(404).json({ message: 'Invoice not found' });
     }

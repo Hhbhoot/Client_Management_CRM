@@ -26,6 +26,7 @@ exports.register = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
         token: generateToken(user._id),
       });
     }
@@ -49,6 +50,7 @@ exports.login = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
         token: generateToken(user._id),
       });
     } else {
@@ -71,6 +73,7 @@ exports.getProfile = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
         profilePic: user.profilePic,
         bio: user.bio,
       });
@@ -107,6 +110,7 @@ exports.updateProfile = async (req, res) => {
         _id: updatedUser._id,
         name: updatedUser.name,
         email: updatedUser.email,
+        role: updatedUser.role,
         profilePic: updatedUser.profilePic,
         bio: updatedUser.bio,
         token: generateToken(updatedUser._id),

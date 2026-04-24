@@ -21,15 +21,15 @@ import CalendarView from './pages/CalendarView';
 import Invoices from './pages/Invoices';
 import Profile from './pages/Profile';
 
+import { useAuth } from './context/AuthContext';
+
 function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { user, logout } = useAuth();
   const location = useLocation();
 
   const onLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.reload();
+    logout();
   };
 
   const menuItems = [
@@ -152,7 +152,14 @@ function Layout() {
 
           <div className="flex items-center gap-4 ml-auto">
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-bold text-white">{user?.name}</p>
+              <div className="flex items-center gap-2 justify-end">
+                {user?.role === 'admin' && (
+                  <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    Admin
+                  </span>
+                )}
+                <p className="text-sm font-bold text-white">{user?.name}</p>
+              </div>
               <p className="text-xs text-gray-400">{user?.email}</p>
             </div>
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 border-2 border-gray-800 shadow-xl overflow-hidden flex items-center justify-center text-white font-bold">

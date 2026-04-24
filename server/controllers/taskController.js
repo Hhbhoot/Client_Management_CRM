@@ -5,9 +5,10 @@ const Task = require('../models/Task');
 // @access  Private
 exports.getTasksByProject = async (req, res) => {
   try {
-    const query = req.user.role === 'admin' 
-      ? { projectId: req.params.projectId } 
-      : { projectId: req.params.projectId, userId: req.user._id };
+    const query =
+      req.user.role === 'admin'
+        ? { projectId: req.params.projectId }
+        : { projectId: req.params.projectId, userId: req.user._id };
     const tasks = await Task.find(query);
     res.json(tasks);
   } catch (error) {

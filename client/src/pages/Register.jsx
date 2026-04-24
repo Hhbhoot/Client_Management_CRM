@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { BASE_API_URL } from '../api';
+import { useAuth } from '../context/AuthContext';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -12,17 +13,16 @@ function Register() {
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const response = await axios.post(`${BASE_API_URL}/api/auth/register`, formData);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data));
+      login(response.data);
       toast.success('Account created successfully!');
       navigate('/');
-      window.location.reload();
     } catch (error) {
       toast.error(error.response?.data?.message || 'Registration failed');
       setLoading(false);

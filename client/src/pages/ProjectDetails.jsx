@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import TaskModal from '../components/TaskModal';
 import FileUpload from '../components/FileUpload';
 import { BASE_API_URL } from '../api';
+import { useAuth } from '../context/AuthContext';
 
 function ProjectDetails() {
   const { id } = useParams();
@@ -13,6 +14,7 @@ function ProjectDetails() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
+  const { isAdmin } = useAuth();
 
   const fetchData = async () => {
     try {
@@ -238,24 +240,26 @@ function ProjectDetails() {
                                       />
                                     </svg>
                                   </button>
-                                  <button
-                                    onClick={() => handleDeleteTask(task._id)}
-                                    className="p-1 text-gray-500 hover:text-red-400"
-                                  >
-                                    <svg
-                                      className="w-4 h-4"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      viewBox="0 0 24 24"
+                                  {isAdmin && (
+                                    <button
+                                      onClick={() => handleDeleteTask(task._id)}
+                                      className="p-1 text-gray-500 hover:text-red-400"
                                     >
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                      />
-                                    </svg>
-                                  </button>
+                                      <svg
+                                        className="w-4 h-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={2}
+                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                        />
+                                      </svg>
+                                    </button>
+                                  )}
                                 </div>
                               </div>
                               <h4 className="font-bold text-gray-100">{task.title}</h4>

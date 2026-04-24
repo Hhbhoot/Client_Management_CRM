@@ -3,12 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { BASE_API_URL } from '../api';
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -18,11 +20,9 @@ function Login() {
         email,
         password,
       });
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data));
+      login(response.data);
       toast.success('Welcome back!');
       navigate('/');
-      window.location.reload();
     } catch (error) {
       toast.error(error.response?.data?.message || 'Invalid credentials');
       setLoading(false);
