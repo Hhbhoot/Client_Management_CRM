@@ -4,12 +4,15 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import InvoiceModal from '../components/InvoiceModal';
 import { BASE_API_URL } from '../api';
+import PaymentModal from '../components/PaymentModal';
 import { useAuth } from '../context/AuthContext';
 
 function Invoices() {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
   const { isAdmin } = useAuth();
 
   const fetchInvoices = async () => {
@@ -29,6 +32,11 @@ function Invoices() {
   useEffect(() => {
     fetchInvoices();
   }, []);
+
+  const handlePayClick = (invoice) => {
+    setSelectedInvoice(invoice);
+    setIsPaymentModalOpen(true);
+  };
 
   const handleCreateInvoice = async (formData) => {
     try {
@@ -204,6 +212,27 @@ function Invoices() {
                     </td>
                     <td className="px-8 py-6">
                       <div className="flex items-center gap-3">
+                        {invoice.status !== 'Paid' && (
+                          <button
+                            onClick={() => handlePayClick(invoice)}
+                            className="flex items-center gap-2 bg-emerald-600/10 text-emerald-400 border border-emerald-500/20 px-4 py-2 rounded-xl font-bold transition-all hover:bg-emerald-600/20 active:scale-95"
+                          >
+                            <svg
+                              className="w-4 h-4"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                              />
+                            </svg>
+                            Pay
+                          </button>
+                        )}
                         <button
                           onClick={() => generatePDF(invoice)}
                           className="p-2.5 text-gray-400 hover:text-blue-400 hover:bg-blue-400/10 rounded-xl transition-all"
@@ -259,6 +288,15 @@ function Invoices() {
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleCreateInvoice}
       />
+
+      {selectedInvoice && (
+        <PaymentModal
+          isOpen={isPaymentModalOpen}
+          onClose={() => setIsPaymentModalOpen(false)}
+          invoice={selectedInvoice}
+          onSuccess={fetchInvoices}
+        />
+      )}
     </div>
   );
 }

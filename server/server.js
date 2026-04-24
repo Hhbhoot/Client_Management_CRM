@@ -25,6 +25,7 @@ app.use('/api/tasks', require('./routes/taskRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/files', require('./routes/fileRoutes'));
 app.use('/api/invoices', require('./routes/invoiceRoutes'));
+app.use('/api/payments', require('./routes/paymentRoutes'));
 
 // Serve static files from the React app
 if (process.env.NODE_ENV === 'production') {
