@@ -82,11 +82,15 @@ function Layout() {
       `}
       >
         <div className="h-full flex flex-col p-6 overflow-y-auto custom-scrollbar">
-          <Link
-            to="/"
-            className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-10 shrink-0"
-          >
-            ClientFlow CRM
+          <Link to="/" className="flex items-center gap-3 mb-10 shrink-0 group">
+            <div className="w-40 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 p-0.5 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+              <div className="w-full h-full bg-gray-900 rounded-[10px] flex items-center justify-center overflow-hidden">
+                <img src="/favicon.png" alt="Logo" className="w-40 h-16 object-cover" />
+              </div>
+            </div>
+            {/* <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+              ClientFlow
+            </span> */}
           </Link>
 
           <nav className="flex-1 space-y-2">
