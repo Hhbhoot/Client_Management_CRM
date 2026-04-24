@@ -5,7 +5,8 @@ const Project = require('../models/Project');
 // @access  Private
 exports.getProjects = async (req, res) => {
   try {
-    const projects = await Project.find({ userId: req.user._id }).populate('clientId', 'name');
+    const query = req.user.role === 'admin' ? {} : { userId: req.user._id };
+    const projects = await Project.find(query).populate('clientId', 'name');
     res.json(projects);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -18,9 +19,15 @@ exports.getProjects = async (req, res) => {
 exports.getProjectById = async (req, res) => {
   try {
     const project = await Project.findById(req.params.id).populate('clientId', 'name');
-    if (!project || project.userId.toString() !== req.user._id.toString()) {
+    if (!project) {
       return res.status(404).json({ message: 'Project not found' });
     }
+
+    // Make sure user owns project or is admin
+    if (project.userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(401).json({ message: 'Not authorized' });
+    }
+
     res.json(project);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -60,8 +67,8 @@ exports.updateProject = async (req, res) => {
       return res.status(404).json({ message: 'Project not found' });
     }
 
-    // Make sure user owns project
-    if (project.userId.toString() !== req.user._id.toString()) {
+    // Make sure user owns project or is admin
+    if (project.userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
@@ -84,8 +91,8 @@ exports.deleteProject = async (req, res) => {
       return res.status(404).json({ message: 'Project not found' });
     }
 
-    // Make sure user owns project
-    if (project.userId.toString() !== req.user._id.toString()) {
+    // Make sure user owns project or is admin
+    if (project.userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(401).json({ message: 'Not authorized' });
     }
 

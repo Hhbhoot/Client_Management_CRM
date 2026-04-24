@@ -33,7 +33,7 @@ exports.uploadFile = async (req, res) => {
 exports.getFiles = async (req, res) => {
   try {
     const { projectId, clientId } = req.query;
-    let query = { userId: req.user._id };
+    let query = req.user.role === 'admin' ? {} : { userId: req.user._id };
 
     if (projectId) query.projectId = projectId;
     if (clientId) query.clientId = clientId;
@@ -56,7 +56,7 @@ exports.deleteFile = async (req, res) => {
       return res.status(404).json({ message: 'File not found' });
     }
 
-    if (file.userId.toString() !== req.user._id.toString()) {
+    if (file.userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(401).json({ message: 'Not authorized' });
     }
 

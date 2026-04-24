@@ -5,10 +5,10 @@ const Task = require('../models/Task');
 // @access  Private
 exports.getTasksByProject = async (req, res) => {
   try {
-    const tasks = await Task.find({
-      projectId: req.params.projectId,
-      userId: req.user._id,
-    });
+    const query = req.user.role === 'admin' 
+      ? { projectId: req.params.projectId } 
+      : { projectId: req.params.projectId, userId: req.user._id };
+    const tasks = await Task.find(query);
     res.json(tasks);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -47,8 +47,8 @@ exports.updateTask = async (req, res) => {
       return res.status(404).json({ message: 'Task not found' });
     }
 
-    // Make sure user owns task
-    if (task.userId.toString() !== req.user._id.toString()) {
+    // Make sure user owns task or is admin
+    if (task.userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
@@ -71,8 +71,8 @@ exports.deleteTask = async (req, res) => {
       return res.status(404).json({ message: 'Task not found' });
     }
 
-    // Make sure user owns task
-    if (task.userId.toString() !== req.user._id.toString()) {
+    // Make sure user owns task or is admin
+    if (task.userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(401).json({ message: 'Not authorized' });
     }
 

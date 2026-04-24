@@ -5,10 +5,8 @@ const Invoice = require('../models/Invoice');
 // @access  Private
 exports.getInvoices = async (req, res) => {
   try {
-    const invoices = await Invoice.find({ userId: req.user._id }).populate(
-      'clientId',
-      'name email'
-    );
+    const query = req.user.role === 'admin' ? {} : { userId: req.user._id };
+    const invoices = await Invoice.find(query).populate('clientId', 'name email');
     res.json(invoices);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -53,9 +51,14 @@ exports.createInvoice = async (req, res) => {
 exports.updateInvoice = async (req, res) => {
   try {
     const invoice = await Invoice.findById(req.params.id);
-
-    if (!invoice || invoice.userId.toString() !== req.user._id.toString()) {
+ 
+    if (!invoice) {
       return res.status(404).json({ message: 'Invoice not found' });
+    }
+
+    // Make sure user owns invoice or is admin
+    if (invoice.userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(401).json({ message: 'Not authorized' });
     }
 
     const updatedInvoice = await Invoice.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -71,9 +74,14 @@ exports.updateInvoice = async (req, res) => {
 exports.deleteInvoice = async (req, res) => {
   try {
     const invoice = await Invoice.findById(req.params.id);
-
-    if (!invoice || invoice.userId.toString() !== req.user._id.toString()) {
+ 
+    if (!invoice) {
       return res.status(404).json({ message: 'Invoice not found' });
+    }
+
+    // Make sure user owns invoice or is admin
+    if (invoice.userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return res.status(401).json({ message: 'Not authorized' });
     }
 
     await invoice.deleteOne();

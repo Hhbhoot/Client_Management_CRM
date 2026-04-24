@@ -7,24 +7,25 @@ const Task = require('../models/Task');
 // @access  Private
 exports.getStats = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const isAdmin = req.user.role === 'admin';
+    const query = isAdmin ? {} : { userId: req.user._id };
 
     const [totalClients, totalProjects, totalTasks, completedTasks] = await Promise.all([
-      Client.countDocuments({ userId }),
-      Project.countDocuments({ userId }),
-      Task.countDocuments({ userId }),
-      Task.countDocuments({ userId, status: 'Done' }),
+      Client.countDocuments(query),
+      Project.countDocuments(query),
+      Task.countDocuments(query),
+      Task.countDocuments({ ...query, status: 'Done' }),
     ]);
 
     // Get project status breakdown for charts
     const projectsByStatus = await Project.aggregate([
-      { $match: { userId } },
+      { $match: query },
       { $group: { _id: '$status', count: { $sum: 1 } } },
     ]);
 
     // Get task priority breakdown
     const tasksByPriority = await Task.aggregate([
-      { $match: { userId } },
+      { $match: query },
       { $group: { _id: '$priority', count: { $sum: 1 } } },
     ]);
 

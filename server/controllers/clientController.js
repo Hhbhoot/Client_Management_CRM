@@ -5,7 +5,8 @@ const Client = require('../models/Client');
 // @access  Private
 exports.getClients = async (req, res) => {
   try {
-    const clients = await Client.find({ userId: req.user._id });
+    const query = req.user.role === 'admin' ? {} : { userId: req.user._id };
+    const clients = await Client.find(query);
     res.json(clients);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -44,8 +45,8 @@ exports.updateClient = async (req, res) => {
       return res.status(404).json({ message: 'Client not found' });
     }
 
-    // Make sure user owns client
-    if (client.userId.toString() !== req.user._id.toString()) {
+    // Make sure user owns client or is admin
+    if (client.userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
@@ -68,8 +69,8 @@ exports.deleteClient = async (req, res) => {
       return res.status(404).json({ message: 'Client not found' });
     }
 
-    // Make sure user owns client
-    if (client.userId.toString() !== req.user._id.toString()) {
+    // Make sure user owns client or is admin
+    if (client.userId.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
