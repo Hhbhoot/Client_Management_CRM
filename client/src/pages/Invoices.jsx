@@ -5,7 +5,7 @@ import autoTable from 'jspdf-autotable';
 import InvoiceModal from '../components/InvoiceModal';
 import { BASE_API_URL } from '../api';
 import PaymentModal from '../components/PaymentModal';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 function Invoices() {
   const [invoices, setInvoices] = useState([]);

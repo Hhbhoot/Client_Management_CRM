@@ -5,7 +5,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import TaskModal from '../components/TaskModal';
 import FileUpload from '../components/FileUpload';
 import { BASE_API_URL } from '../api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 function ProjectDetails() {
   const { id } = useParams();

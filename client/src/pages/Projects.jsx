@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import ProjectModal from '../components/ProjectModal';
 import { GridSkeleton } from '../components/Skeleton';
 import { BASE_API_URL } from '../api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 function Projects() {
   const [projects, setProjects] = useState([]);

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { BASE_API_URL } from '../api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 function FileUpload({ projectId, clientId }) {
   const [files, setFiles] = useState([]);

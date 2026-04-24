@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import ClientModal from '../components/ClientModal';
 import { TableRowSkeleton } from '../components/Skeleton';
 import { BASE_API_URL } from '../api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 
 function Clients() {
   const [clients, setClients] = useState([]);

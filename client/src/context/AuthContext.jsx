@@ -1,19 +1,32 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { BASE_API_URL } from '../api';
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Potentially verify token or fetch fresh user data here
-      // For now, we trust the localStorage user object if token exists
-    }
-    setLoading(false);
+    const verifyToken = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await axios.get(`${BASE_API_URL}/api/auth/profile`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setUser({ ...response.data, token });
+          localStorage.setItem('user', JSON.stringify({ ...response.data, token }));
+        } catch (error) {
+          console.error('Token verification failed:', error);
+          logout();
+        }
+      }
+      setLoading(false);
+    };
+
+    verifyToken();
   }, []);
 
   const login = (userData) => {
@@ -37,4 +50,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export { AuthProvider };
