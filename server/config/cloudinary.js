@@ -3,9 +3,10 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 
 // Check if Cloudinary credentials exist to prevent server crash
-const isCloudinaryConfigured = process.env.CLOUDINARY_CLOUD_NAME && 
-                               process.env.CLOUDINARY_API_KEY && 
-                               process.env.CLOUDINARY_API_SECRET;
+const isCloudinaryConfigured =
+  process.env.CLOUDINARY_CLOUD_NAME &&
+  process.env.CLOUDINARY_API_KEY &&
+  process.env.CLOUDINARY_API_SECRET;
 
 if (isCloudinaryConfigured) {
   cloudinary.config({

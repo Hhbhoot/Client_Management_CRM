@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
 function ClientModal({ isOpen, onClose, onSubmit, client }) {
   const [formData, setFormData] = useState({
@@ -6,51 +6,53 @@ function ClientModal({ isOpen, onClose, onSubmit, client }) {
     email: '',
     phone: '',
     company: '',
-  })
+  });
 
   useEffect(() => {
     if (client) {
-      setFormData(client)
+      setFormData(client);
     } else {
       setFormData({
         name: '',
         email: '',
         phone: '',
         company: '',
-      })
+      });
     }
-  }, [client, isOpen])
+  }, [client, isOpen]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const onChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleFormSubmit = (e) => {
-    e.preventDefault()
-    onSubmit(formData)
-  }
+    e.preventDefault();
+    onSubmit(formData);
+  };
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div 
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm" 
-        onClick={onClose}
-      />
-      
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+
       <div className="relative w-full max-w-lg bg-gray-900 rounded-3xl shadow-2xl border border-gray-800 overflow-hidden">
         <div className="p-8">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
               {client ? 'Edit Client' : 'Add New Client'}
             </h2>
-            <button 
+            <button
               onClick={onClose}
               className="p-2 text-gray-500 hover:text-white transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           </div>
@@ -69,7 +71,9 @@ function ClientModal({ isOpen, onClose, onSubmit, client }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2 ml-1">Email Address</label>
+              <label className="block text-sm font-medium text-gray-400 mb-2 ml-1">
+                Email Address
+              </label>
               <input
                 type="email"
                 name="email"
@@ -82,7 +86,9 @@ function ClientModal({ isOpen, onClose, onSubmit, client }) {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-2 ml-1">Phone Number</label>
+                <label className="block text-sm font-medium text-gray-400 mb-2 ml-1">
+                  Phone Number
+                </label>
                 <input
                   type="text"
                   name="phone"
@@ -126,7 +132,7 @@ function ClientModal({ isOpen, onClose, onSubmit, client }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default ClientModal
+export default ClientModal;

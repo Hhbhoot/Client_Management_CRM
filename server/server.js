@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
@@ -25,13 +26,22 @@ app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/files', require('./routes/fileRoutes'));
 app.use('/api/invoices', require('./routes/invoiceRoutes'));
 
-// Basic root route
-app.get('/', (req, res) => {
+// Serve static files from the React app
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/dist')));
+
+  app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+  });
+} else {
+  // Basic root route for development
+  app.get('/', (req, res) => {
     res.send('Server is running...');
-});
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });

@@ -1,51 +1,59 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
-import { BASE_API_URL } from '../api'
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { BASE_API_URL } from '../api';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
 
 function CalendarView() {
-  const [events, setEvents] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const token = localStorage.getItem('token')
+        const token = localStorage.getItem('token');
         const response = await axios.get(`${BASE_API_URL}/api/projects`, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-        
-        const projectEvents = response.data.map(project => {
-          const deadline = new Date(project.deadline)
-          const isOverdue = deadline < new Date() && project.status !== 'Completed'
-          
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const projectEvents = response.data.map((project) => {
+          const deadline = new Date(project.deadline);
+          const isOverdue = deadline < new Date() && project.status !== 'Completed';
+
           return {
             id: project._id,
             title: project.name,
             start: project.deadline,
             allDay: true,
-            backgroundColor: isOverdue ? '#ef4444' : (project.status === 'Completed' ? '#10b981' : '#3b82f6'),
-            borderColor: isOverdue ? '#dc2626' : (project.status === 'Completed' ? '#059669' : '#2563eb'),
+            backgroundColor: isOverdue
+              ? '#ef4444'
+              : project.status === 'Completed'
+                ? '#10b981'
+                : '#3b82f6',
+            borderColor: isOverdue
+              ? '#dc2626'
+              : project.status === 'Completed'
+                ? '#059669'
+                : '#2563eb',
             extendedProps: {
               status: project.status,
               client: project.clientId?.name,
-              isOverdue
-            }
-          }
-        })
-        
-        setEvents(projectEvents)
-        setLoading(false)
-      } catch (error) {
-        console.error('Failed to fetch projects for calendar')
-        setLoading(false)
-      }
-    }
-    fetchProjects()
-  }, [])
+              isOverdue,
+            },
+          };
+        });
 
-  if (loading) return <div className="p-10 text-center text-gray-500">Loading calendar...</div>
+        setEvents(projectEvents);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch projects for calendar');
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
+
+  if (loading) return <div className="p-10 text-center text-gray-500">Loading calendar...</div>;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -64,7 +72,7 @@ function CalendarView() {
             headerToolbar={{
               left: 'prev,next today',
               center: 'title',
-              right: ''
+              right: '',
             }}
             eventContent={(eventInfo) => (
               <div className="px-2 py-1 rounded-lg overflow-hidden text-ellipsis whitespace-nowrap text-[11px] font-bold shadow-sm">
@@ -153,7 +161,7 @@ function CalendarView() {
         }
       `}</style>
     </div>
-  )
+  );
 }
 
-export default CalendarView
+export default CalendarView;

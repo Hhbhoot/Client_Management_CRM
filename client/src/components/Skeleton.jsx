@@ -1,7 +1,5 @@
 function Skeleton({ className }) {
-  return (
-    <div className={`animate-pulse bg-gray-800 rounded-2xl ${className}`} />
-  )
+  return <div className={`animate-pulse bg-gray-800 rounded-2xl ${className}`} />;
 }
 
 export function CardSkeleton() {
@@ -10,7 +8,7 @@ export function CardSkeleton() {
       <Skeleton className="h-4 w-1/4" />
       <Skeleton className="h-8 w-1/2" />
     </div>
-  )
+  );
 }
 
 export function TableRowSkeleton() {
@@ -23,7 +21,7 @@ export function TableRowSkeleton() {
       </div>
       <Skeleton className="h-8 w-20" />
     </div>
-  )
+  );
 }
 
 export function GridSkeleton() {
@@ -43,7 +41,7 @@ export function GridSkeleton() {
         <Skeleton className="h-10 flex-1" />
       </div>
     </div>
-  )
+  );
 }
 
-export default Skeleton
+export default Skeleton;

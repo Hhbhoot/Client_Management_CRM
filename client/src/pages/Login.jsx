@@ -1,33 +1,33 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import toast from 'react-hot-toast'
-import { BASE_API_URL } from '../api'
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { BASE_API_URL } from '../api';
 
 function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
     try {
       const response = await axios.post(`${BASE_API_URL}/api/auth/login`, {
         email,
-        password
-      })
-      localStorage.setItem('token', response.data.token)
-      localStorage.setItem('user', JSON.stringify(response.data))
-      toast.success('Welcome back!')
-      navigate('/')
-      window.location.reload()
+        password,
+      });
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data));
+      toast.success('Welcome back!');
+      navigate('/');
+      window.location.reload();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Invalid credentials')
-      setLoading(false)
+      toast.error(error.response?.data?.message || 'Invalid credentials');
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-950 flex items-center justify-center p-6">
@@ -43,7 +43,9 @@ function Login() {
           <h2 className="text-3xl font-bold text-white text-center">Login</h2>
           <form onSubmit={onSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-xs font-black text-gray-500 uppercase tracking-widest ml-1">Email Address</label>
+              <label className="text-xs font-black text-gray-500 uppercase tracking-widest ml-1">
+                Email Address
+              </label>
               <input
                 type="email"
                 required
@@ -54,7 +56,9 @@ function Login() {
               />
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-black text-gray-500 uppercase tracking-widest ml-1">Password</label>
+              <label className="text-xs font-black text-gray-500 uppercase tracking-widest ml-1">
+                Password
+              </label>
               <input
                 type="password"
                 required
@@ -76,7 +80,10 @@ function Login() {
           <div className="text-center pt-2">
             <p className="text-gray-500 font-medium">
               New here?{' '}
-              <Link to="/register" className="text-blue-400 hover:text-blue-300 font-bold transition-colors">
+              <Link
+                to="/register"
+                className="text-blue-400 hover:text-blue-300 font-bold transition-colors"
+              >
                 Create an account
               </Link>
             </p>
@@ -84,7 +91,7 @@ function Login() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;

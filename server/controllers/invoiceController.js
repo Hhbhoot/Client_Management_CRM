@@ -4,78 +4,81 @@ const Invoice = require('../models/Invoice');
 // @route   GET /api/invoices
 // @access  Private
 exports.getInvoices = async (req, res) => {
-    try {
-        const invoices = await Invoice.find({ userId: req.user._id }).populate('clientId', 'name email');
-        res.json(invoices);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+  try {
+    const invoices = await Invoice.find({ userId: req.user._id }).populate(
+      'clientId',
+      'name email'
+    );
+    res.json(invoices);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // @desc    Create new invoice
 // @route   POST /api/invoices
 // @access  Private
 exports.createInvoice = async (req, res) => {
-    try {
-        const { clientId, items, tax, dueDate, status } = req.body;
+  try {
+    const { clientId, items, tax, dueDate, status } = req.body;
 
-        const subtotal = items.reduce((acc, item) => acc + item.total, 0);
-        const totalAmount = subtotal + (tax || 0);
+    const subtotal = items.reduce((acc, item) => acc + item.total, 0);
+    const totalAmount = subtotal + (tax || 0);
 
-        // Simple invoice number generation
-        const count = await Invoice.countDocuments({ userId: req.user._id });
-        const invoiceNumber = `INV-${new Date().getFullYear()}-${(count + 1).toString().padStart(4, '0')}`;
+    // Simple invoice number generation
+    const count = await Invoice.countDocuments({ userId: req.user._id });
+    const invoiceNumber = `INV-${new Date().getFullYear()}-${(count + 1).toString().padStart(4, '0')}`;
 
-        const invoice = await Invoice.create({
-            invoiceNumber,
-            clientId,
-            items,
-            subtotal,
-            tax: tax || 0,
-            totalAmount,
-            dueDate,
-            status: status || 'Unpaid',
-            userId: req.user._id,
-        });
+    const invoice = await Invoice.create({
+      invoiceNumber,
+      clientId,
+      items,
+      subtotal,
+      tax: tax || 0,
+      totalAmount,
+      dueDate,
+      status: status || 'Unpaid',
+      userId: req.user._id,
+    });
 
-        res.status(201).json(invoice);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+    res.status(201).json(invoice);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // @desc    Update invoice status
 // @route   PUT /api/invoices/:id
 // @access  Private
 exports.updateInvoice = async (req, res) => {
-    try {
-        const invoice = await Invoice.findById(req.params.id);
+  try {
+    const invoice = await Invoice.findById(req.params.id);
 
-        if (!invoice || invoice.userId.toString() !== req.user._id.toString()) {
-            return res.status(404).json({ message: 'Invoice not found' });
-        }
-
-        const updatedInvoice = await Invoice.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.json(updatedInvoice);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    if (!invoice || invoice.userId.toString() !== req.user._id.toString()) {
+      return res.status(404).json({ message: 'Invoice not found' });
     }
+
+    const updatedInvoice = await Invoice.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updatedInvoice);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 // @desc    Delete invoice
 // @route   DELETE /api/invoices/:id
 // @access  Private
 exports.deleteInvoice = async (req, res) => {
-    try {
-        const invoice = await Invoice.findById(req.params.id);
+  try {
+    const invoice = await Invoice.findById(req.params.id);
 
-        if (!invoice || invoice.userId.toString() !== req.user._id.toString()) {
-            return res.status(404).json({ message: 'Invoice not found' });
-        }
-
-        await invoice.deleteOne();
-        res.json({ message: 'Invoice removed' });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+    if (!invoice || invoice.userId.toString() !== req.user._id.toString()) {
+      return res.status(404).json({ message: 'Invoice not found' });
     }
+
+    await invoice.deleteOne();
+    res.json({ message: 'Invoice removed' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };

@@ -1,47 +1,84 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, Link, Outlet, useLocation } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import { Toaster } from 'react-hot-toast'
-import axios from 'axios'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Clients from './pages/Clients'
-import ProtectedRoute from './components/ProtectedRoute'
-import Projects from './pages/Projects'
-import ProjectDetails from './pages/ProjectDetails'
-import Dashboard from './pages/Dashboard'
-import CalendarView from './pages/CalendarView'
-import Invoices from './pages/Invoices'
-import Profile from './pages/Profile'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  Link,
+  Outlet,
+  useLocation,
+} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
+import axios from 'axios';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Clients from './pages/Clients';
+import ProtectedRoute from './components/ProtectedRoute';
+import Projects from './pages/Projects';
+import ProjectDetails from './pages/ProjectDetails';
+import Dashboard from './pages/Dashboard';
+import CalendarView from './pages/CalendarView';
+import Invoices from './pages/Invoices';
+import Profile from './pages/Profile';
 
 function Layout() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const user = JSON.parse(localStorage.getItem('user'))
-  const location = useLocation()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const user = JSON.parse(localStorage.getItem('user'));
+  const location = useLocation();
 
   const onLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    window.location.reload()
-  }
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.reload();
+  };
 
   const menuItems = [
-    { name: 'Dashboard', path: '/', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-    { name: 'Clients', path: '/clients', icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
-    { name: 'Projects', path: '/projects', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
-    { name: 'Calendar', path: '/calendar', icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
-    { name: 'Invoices', path: '/invoices', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-    { name: 'Profile', path: '/profile', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' },
-  ]
+    {
+      name: 'Dashboard',
+      path: '/',
+      icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+    },
+    {
+      name: 'Clients',
+      path: '/clients',
+      icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z',
+    },
+    {
+      name: 'Projects',
+      path: '/projects',
+      icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
+    },
+    {
+      name: 'Calendar',
+      path: '/calendar',
+      icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z',
+    },
+    {
+      name: 'Invoices',
+      path: '/invoices',
+      icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+    },
+    {
+      name: 'Profile',
+      path: '/profile',
+      icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z',
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-950 text-gray-100 flex overflow-hidden">
       {/* Sidebar */}
-      <aside className={`
+      <aside
+        className={`
         fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 border-r border-gray-800 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-      `}>
+      `}
+      >
         <div className="h-full flex flex-col p-6">
-          <Link to="/" className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-10">
+          <Link
+            to="/"
+            className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 mb-10"
+          >
             ClientFlow CRM
           </Link>
 
@@ -51,13 +88,19 @@ function Layout() {
                 key={item.name}
                 to={item.path}
                 onClick={() => setIsSidebarOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 ${location.pathname === item.path
-                  ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20 shadow-lg shadow-blue-500/5'
-                  : 'text-gray-400 hover:bg-gray-800/50 hover:text-white'
-                  }`}
+                className={`flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 ${
+                  location.pathname === item.path
+                    ? 'bg-blue-600/10 text-blue-400 border border-blue-500/20 shadow-lg shadow-blue-500/5'
+                    : 'text-gray-400 hover:bg-gray-800/50 hover:text-white'
+                }`}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d={item.icon}
+                  />
                 </svg>
                 <span className="font-medium">{item.name}</span>
               </Link>
@@ -69,7 +112,12 @@ function Layout() {
             className="mt-auto flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-red-400 transition-colors rounded-2xl hover:bg-red-500/5"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
             </svg>
             <span className="font-medium">Logout</span>
           </button>
@@ -93,7 +141,12 @@ function Layout() {
             onClick={() => setIsSidebarOpen(true)}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           </button>
 
@@ -120,7 +173,7 @@ function Layout() {
         </main>
       </div>
     </div>
-  )
+  );
 }
 
 function App() {
@@ -159,7 +212,7 @@ function App() {
         </Route>
       </Routes>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
