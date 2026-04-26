@@ -3,6 +3,7 @@ const path = require('path');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const morgan = require('morgan');
 
 // Load env vars
 dotenv.config();
@@ -15,7 +16,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-
+app.use(morgan('dev'));
 // Routes
 app.use('/api', require('./routes/api'));
 app.use('/api/auth', require('./routes/authRoutes'));

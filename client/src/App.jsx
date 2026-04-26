@@ -21,6 +21,8 @@ import CalendarView from './pages/CalendarView';
 import Invoices from './pages/Invoices';
 import Profile from './pages/Profile';
 import Analytics from './pages/Analytics';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 import { useAuth } from './context/useAuth';
 
@@ -211,6 +213,8 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route
           path="/"
           element={
