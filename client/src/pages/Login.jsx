@@ -4,6 +4,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { BASE_API_URL } from '../api';
 import { useAuth } from '../context/useAuth';
+import { GoogleLogin } from '@react-oauth/google';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -25,6 +26,22 @@ function Login() {
       navigate('/');
     } catch (error) {
       toast.error(error.response?.data?.message || 'Invalid credentials');
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setLoading(true);
+    try {
+      const response = await axios.post(`${BASE_API_URL}/api/auth/google`, {
+        credential: credentialResponse.credential,
+      });
+      login(response.data);
+      toast.success('Login Successful!');
+      navigate('/');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Google Login Failed');
+    } finally {
       setLoading(false);
     }
   };
@@ -84,6 +101,28 @@ function Login() {
               {loading ? 'Authenticating...' : 'Sign In'}
             </button>
           </form>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-800"></div>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-gray-900 px-2 text-gray-500 font-black tracking-widest">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          <div className="flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => toast.error('Google Login Failed')}
+              theme="filled_blue"
+              shape="pill"
+              size="large"
+              width="360"
+            />
+          </div>
 
           <div className="text-center pt-2">
             <p className="text-gray-500 font-medium">

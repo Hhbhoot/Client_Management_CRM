@@ -1,6 +1,54 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { OAuth2Client } = require('google-auth-library');
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+// @desc    Login with Google
+// @route   POST /api/auth/google
+// @access  Public
+exports.googleLogin = async (req, res) => {
+  const { credential } = req.body;
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const { name, email, picture, sub } = ticket.getPayload();
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Create user if not exists
+      user = await User.create({
+        name,
+        email,
+        password: crypto.randomBytes(16).toString('hex'), // Random password for social login
+        profilePic: picture,
+      });
+    } else if (!user.profilePic) {
+      // Update profile pic if empty
+      user.profilePic = picture;
+      await user.save();
+    }
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      profilePic: user.profilePic,
+      bio: user.bio,
+      token: generateToken(user._id),
+    });
+  } catch (error) {
+    console.error('Google Login Error:', error);
+    res.status(400).json({ message: 'Google authentication failed' });
+  }
+};
 
 // @desc    Register user
 // @route   POST /api/auth/register
